@@ -1,4 +1,4 @@
-# bandwidth plugin
+# CNI bandwidth plugin
 
 网络带宽隔离工具。
 
