@@ -90,7 +90,10 @@ generic_scheduler.go:742] Node kube-node1 is a potential node for preemption.
 scheduler.go:209] Preempting 1 pod(s) on node kube-node1 to make room for default/nginx-high.
 ```
 
-`admission controller`会根据`Pod.Spec.PriorityClassName`字段计算`Pod.Spec.Priority`的值，该值越大，Pod的优先级越高：
+## PriorityClassName => Priority
+
+`admission controller`会根据`Pod.Spec.PriorityClassName`字段计算`Pod.Spec.Priority
+`的值，该值越大，Pod的优先级越高：
 
 ```
 // PodSpec is a description of a pod.
@@ -125,6 +128,51 @@ spec:
   nodeName: kube-node1
   priority: 1000000
 ...
+```
+
+相关实现参考`plugin/pkg/admission/priority/admission.go`:
+
+```
+// admitPod makes sure a new pod does not set spec.Priority field. It also makes sure that the PriorityClassName exists if it is provided and resolves the pod priority from the PriorityClassName.
+// Note that pod validation mechanism prevents update of a pod priority.
+func (p *priorityPlugin) admitPod(a admission.Attributes) error {
+	operation := a.GetOperation()
+	pod, ok := a.GetObject().(*api.Pod)
+	if !ok {
+		return errors.NewBadRequest("resource was marked with kind Pod but was unable to be converted")
+	}
+
+	// Make sure that the client has not set `priority` at the time of pod creation.
+	if operation == admission.Create && pod.Spec.Priority != nil {
+		return admission.NewForbidden(a, fmt.Errorf("the integer value of priority must not be provided in pod spec. Priority admission controller populates the value from the given PriorityClass name"))
+	}
+	if utilfeature.DefaultFeatureGate.Enabled(features.PodPriority) {
+		var priority int32
+		if len(pod.Spec.PriorityClassName) == 0 {
+			var err error
+			priority, err = p.getDefaultPriority()
+			if err != nil {
+				return fmt.Errorf("failed to get default priority class: %v", err)
+			}
+		} else {
+			// First try to resolve by system priority classes.
+			priority, ok = SystemPriorityClasses[pod.Spec.PriorityClassName]
+			if !ok {
+				// Now that we didn't find any system priority, try resolving by user defined priority classes.
+				pc, err := p.lister.Get(pod.Spec.PriorityClassName)
+				if err != nil {
+					return fmt.Errorf("failed to get default priority class %s: %v", pod.Spec.PriorityClassName, err)
+				}
+				if pc == nil {
+					return admission.NewForbidden(a, fmt.Errorf("no PriorityClass with name %v was found", pod.Spec.PriorityClassName))
+				}
+				priority = pc.Value
+			}
+		}
+		pod.Spec.Priority = &priority
+	}
+	return nil
+}
 ```
 
 ## Refs
