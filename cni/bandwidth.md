@@ -1,6 +1,6 @@
 # CNI bandwidth plugin
 
-网络带宽隔离工具。
+CNI网络带宽隔离工具。
 
 ## 测试
 
