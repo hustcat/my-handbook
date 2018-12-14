@@ -6,6 +6,10 @@
   - [istio 101](kubernetes/istio/101.md)
   - [istio sidecar 101](kubernetes/istio/sidecar_101.md)
   - [bookinfo application example](kubernetes/istio/bookinfo_example.md)
+  - [debug notes](kubernetes/istio/debug_notes.md)
+
+- [kube-scheduler](kubernetes/scheduler/index.md)
+  - [先级与抢占(Priority and Preempt)](kubernetes/scheduler/priority.md)
 
 ## Envoy
 
