@@ -2,9 +2,9 @@
 
 ## Kubernetes
 
-- [istio handbook](istio/index.md)
-  - [istio 101](istio/101.md)
-  - [istio sidecar 101](istio/sidecar_101.md)
+- [istio handbook](kubernetes/istio/index.md)
+  - [istio 101](kubernetes/istio/101.md)
+  - [istio sidecar 101](kubernetes/istio/sidecar_101.md)
 
 ## Envoy
 
