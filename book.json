@@ -1,0 +1,47 @@
+{
+    "title": "YY's Notes on Tech",
+    "author": "Ye Yin",
+    "gitbook": ">= 3.2.2",
+    "language": "zh-cn",
+    "plugins": [
+        "mermaid",
+        "github",
+        "editlink",
+        "github-buttons",
+        "tbfed-pagefooter",
+        "anchor-navigation-ex-toc",
+        "-lunr",
+        "-search",
+        "search-plus"
+    ],
+    "pluginsConfig": {
+        "github-buttons": {
+            "repo": "hustcat/my-handbook",
+            "types": [
+                "star",
+                "watch"
+            ],
+            "size": "small"
+        },
+        "github": {
+            "url": "https://github.com/hustcat/my-handbook"
+        },
+        "editlink": {
+            "base": "https://github.com/hustcat/my-handbook/blob/master/",
+            "label": "编辑本页"
+        },
+        "anchor-navigation-ex-toc": {
+            "showLevel": false,
+            "mode": "float",
+            "float": {
+                "showLevelIcon": false
+            }
+        },
+        "tbfed-pagefooter": {
+          "copyright":"&copy Ye Yin",
+          "modify_label": "Updated at",
+          "modify_format": "YYYY-MM-DD HH:mm:ss"
+        }
+    },
+    "generator": "site"
+}
